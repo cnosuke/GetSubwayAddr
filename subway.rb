@@ -18,6 +18,9 @@
 
 require 'nokogiri'
 require 'open-uri'
+require 'optparse'
+Opt = OptionParser.new
+Version = "1.0"
 
 class Subway
 
@@ -87,8 +90,21 @@ end
 
 # 動作サンプル
 # 実行時引数にサブウェイの店舗一覧のURLを与えると、住所を探してきて出力する
-# subway = Subway.new()
-# subway.search
-# puts subway.addr_list.size
 
+subway = nil
 
+Opt.on("-s","--sample") do
+  subway = Subway.new()
+  subway.search
+  puts "size: "+subway.addr_list.size.to_s
+end
+
+Opt.on("-l","--list") do
+  unless subway
+    subway = Subway.new()
+    subway.search
+  end
+  puts subway.addr_list
+end
+
+Opt.parse(ARGV)
